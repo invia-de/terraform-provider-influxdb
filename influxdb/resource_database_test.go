@@ -1,10 +1,10 @@
 package influxdb
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 
-	"encoding/json"
 	"github.com/hashicorp/terraform/helper/resource"
 	"github.com/hashicorp/terraform/terraform"
 	"github.com/influxdata/influxdb/client"
@@ -14,7 +14,7 @@ func TestAccInfluxDBDatabase(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccDatabaseConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDatabaseExists("influxdb_database.test"),
@@ -31,7 +31,7 @@ func TestAccInfluxDBDatabaseWithRPs(t *testing.T) {
 	resource.Test(t, resource.TestCase{
 		Providers: testAccProviders,
 		Steps: []resource.TestStep{
-			resource.TestStep{
+			{
 				Config: testAccDatabaseWithRPSConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDatabaseExists("influxdb_database.rptest"),
@@ -43,7 +43,7 @@ func TestAccInfluxDBDatabaseWithRPs(t *testing.T) {
 					testAccCheckRetentionPolicy("influxdb_database.rptest", "terraform-rp-test", "1week", "168h0m0s", "1", "1h0m0s", false),
 				),
 			},
-			resource.TestStep{
+			{
 				Config: testAccDatabaseWithRPSUpdateConfig,
 				Check: resource.ComposeTestCheckFunc(
 					testAccCheckDatabaseExists("influxdb_database.rptest"),
@@ -187,44 +187,40 @@ resource "influxdb_database" "test" {
 
 var testAccDatabaseWithRPSConfig = `
 resource "influxdb_database" "rptest" {
-  name = "terraform-rp-test"
-  retention_policies = [
-    {
-      name = "1day",
-      duration = "1d",
-      default = "true"
-    },
-    {
-      name = "52weeks",
-      duration = "52w"
-    },
-	{
-      name = "1week",
-      duration = "1w"
-      shardgroupduration = "1h"
-    },
-  ]
+	name = "terraform-rp-test"
+	retention_policies {
+		name = "1day"
+		duration = "1d"
+		default = "true"
+	}
+	retention_policies {
+		name = "52weeks"
+		duration = "52w"
+	}
+	retention_policies {
+		name = "1week"
+		duration = "1w"
+		shardgroupduration = "1h"
+	}
 }
 `
 
 var testAccDatabaseWithRPSUpdateConfig = `
 resource "influxdb_database" "rptest" {
   name = "terraform-rp-test"
-  retention_policies = [
-    {
-      name = "2days",
-      duration = "2d"
-    },
-    {
-      name = "12weeks",
-      duration = "12w",
-      default = "true"
-    },
-	{
-      name = "1week",
-      duration = "1w",
-      shardgroupduration = "1h"
-    },
-  ]
+	retention_policies {
+		name = "2days"
+		duration = "2d"
+	}
+	retention_policies {
+		name = "12weeks"
+		duration = "12w"
+		default = "true"
+	}
+	retention_policies {
+		name = "1week"
+		duration = "1w"
+		shardgroupduration = "1h"
+	}
 }
 `
