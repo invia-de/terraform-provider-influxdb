@@ -1,3 +1,10 @@
+## 1.3.1 (Unreleased)
+## 1.3.0 (August 12, 2019)
+
+IMPROVEMENTS:
+
+* Support for optional shard group duration in database configuration
+
 ## 1.2.0 (May 22, 2019)
 
 IMPROVEMENTS:
